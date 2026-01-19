@@ -7,7 +7,10 @@
 
 package frc.robot;
 
+import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj.RobotBase;
+import java.util.Optional;
 
 /**
  * This class defines the runtime mode used by AdvantageKit. The mode is always "real" when running
@@ -29,5 +32,19 @@ public final class Constants {
 
     /** Replaying from a log file. */
     REPLAY
+  }
+
+  public static boolean isAllianceRed() {
+    Optional<Alliance> alliance = DriverStation.getAlliance();
+    boolean yes = false;
+    if (alliance.isPresent()) {
+      if (alliance.get() == Alliance.Red) {
+        yes = true;
+      }
+      if (alliance.get() == Alliance.Blue) {
+        yes = false;
+      }
+    }
+    return yes;
   }
 }

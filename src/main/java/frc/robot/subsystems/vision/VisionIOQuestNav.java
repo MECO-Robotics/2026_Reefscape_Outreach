@@ -8,6 +8,7 @@ import edu.wpi.first.math.geometry.Translation3d;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
+import frc.robot.Constants;
 import gg.questnav.questnav.PoseFrame;
 import gg.questnav.questnav.QuestNav;
 import org.littletonrobotics.junction.Logger;
@@ -20,7 +21,7 @@ public class VisionIOQuestNav implements VisionIO {
       float[] translation,
       float[] rotation) {}
 
-  private QuestNav questNav = new QuestNav();
+  private QuestNav questNav;
 
   private final Transform3d robotToCamera;
 
@@ -30,7 +31,7 @@ public class VisionIOQuestNav implements VisionIO {
   private Translation3d[] questNavRawToFieldCoordinateSystemQueue = new Translation3d[15];
   private Translation3d questNavRawToFieldCoordinateSystem = new Translation3d();
 
-  protected Rotation3d gyroResetAngle = new Rotation3d();
+  protected Rotation3d gyroResetAngle;
   protected Pose3d lastPose3d = new Pose3d();
 
   int count = 0;
@@ -38,8 +39,11 @@ public class VisionIOQuestNav implements VisionIO {
 
   public VisionIOQuestNav(Transform3d robotToCamera, VisionIO absoluteVisionIO) {
     // Initialize the camera to robot transform
+    questNav = new QuestNav();
     this.robotToCamera = robotToCamera;
     this.absoluteVisionIO = absoluteVisionIO;
+
+    gyroResetAngle = Constants.isAllianceRed() ? Rotation3d.kZero : new Rotation3d(0, 0, Math.PI);
   }
 
   @Override
@@ -130,7 +134,6 @@ public class VisionIOQuestNav implements VisionIO {
   }
 
   private float[] getQuestTranslation(Pose3d pose) {
-    // TODO: Check if translation floats are correct.
     float xPosition = (float) pose.getX();
     float yPosition = (float) pose.getY();
     float zPosition = (float) pose.getZ();
@@ -139,8 +142,6 @@ public class VisionIOQuestNav implements VisionIO {
   }
 
   private float[] getQuestRotation(Rotation3d angle) {
-
-    // TODO: Check if yaw and roll are good when inversed
     float yaw = (float) -Units.radiansToDegrees(angle.getZ());
     float pitch = (float) Units.radiansToDegrees(angle.getY());
     float roll = (float) -Units.radiansToDegrees(angle.getX());
@@ -154,7 +155,7 @@ public class VisionIOQuestNav implements VisionIO {
         pose.getTranslation()
             .minus(lastPose3d.getTranslation().minus(questNavRawToFieldCoordinateSystem));
 
-    // TODO: clarify if we need to have the robot to camera 
+    // TODO: clarify if we need to have the robot to camera
     questNav.setPose(pose.transformBy(robotToCamera));
 
     count = 0;
