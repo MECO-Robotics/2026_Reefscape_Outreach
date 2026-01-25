@@ -29,13 +29,13 @@ public class VisionConstants {
           Units.inchesToMeters(5.5),
           Units.inchesToMeters(4.5),
           Units.inchesToMeters(9.25),
-          new Rotation3d(0.0, 0.0, Units.degreesToRadians(0)));
+          new Rotation3d(Units.degreesToRadians(0), 0.0, Units.degreesToRadians(0)));
   public static Transform3d robotToCamera1 =
       new Transform3d(
           Units.inchesToMeters(-5.5),
           Units.inchesToMeters(5.5),
           Units.inchesToMeters(10.25),
-          new Rotation3d(0.0, Units.degreesToRadians(60), Units.degreesToRadians(0)));
+          new Rotation3d(0.0, Units.degreesToRadians(0), Units.degreesToRadians(0)));
 
   // Basic filtering thresholds
   public static double maxAmbiguity = 0.3;

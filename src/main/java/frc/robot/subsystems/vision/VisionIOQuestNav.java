@@ -8,7 +8,6 @@ import edu.wpi.first.math.geometry.Translation3d;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
-import frc.robot.Constants;
 import gg.questnav.questnav.PoseFrame;
 import gg.questnav.questnav.QuestNav;
 import org.littletonrobotics.junction.Logger;
@@ -31,7 +30,7 @@ public class VisionIOQuestNav implements VisionIO {
   private Translation3d[] questNavRawToFieldCoordinateSystemQueue = new Translation3d[15];
   private Translation3d questNavRawToFieldCoordinateSystem = new Translation3d();
 
-  protected Rotation3d gyroResetAngle;
+  protected Rotation3d gyroResetAngle = new Rotation3d();
   protected Pose3d lastPose3d = new Pose3d();
 
   int count = 0;
@@ -43,7 +42,8 @@ public class VisionIOQuestNav implements VisionIO {
     this.robotToCamera = robotToCamera;
     this.absoluteVisionIO = absoluteVisionIO;
 
-    gyroResetAngle = Constants.isAllianceRed() ? Rotation3d.kZero : new Rotation3d(0, 0, Math.PI);
+    // gyroResetAngle = Constants.isAllianceRed() ? Rotation3d.kZero : new Rotation3d(0, 0,
+    // Math.PI);
   }
 
   @Override
@@ -123,7 +123,10 @@ public class VisionIOQuestNav implements VisionIO {
     for (int i = 0; i < length; i++) {
       data[i] =
           new QuestNavData(
-              newFrame[i].questPose3d().plus(robotToCamera.inverse()),
+              newFrame[i]
+                  .questPose3d()
+                  .rotateBy(robotToCamera.getRotation())
+                  .plus(robotToCamera.inverse()),
               battery,
               newFrame[i].dataTimestamp(),
               getQuestTranslation(newFrame[i].questPose3d()),
