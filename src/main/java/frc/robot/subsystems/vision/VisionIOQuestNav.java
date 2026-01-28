@@ -20,7 +20,7 @@ public class VisionIOQuestNav implements VisionIO {
       float[] translation,
       float[] rotation) {}
 
-  private QuestNav questNav = new QuestNav();
+  private QuestNav questNav;
 
   private final Transform3d robotToCamera;
 
@@ -38,8 +38,12 @@ public class VisionIOQuestNav implements VisionIO {
 
   public VisionIOQuestNav(Transform3d robotToCamera, VisionIO absoluteVisionIO) {
     // Initialize the camera to robot transform
+    questNav = new QuestNav();
     this.robotToCamera = robotToCamera;
     this.absoluteVisionIO = absoluteVisionIO;
+
+    // gyroResetAngle = Constants.isAllianceRed() ? Rotation3d.kZero : new Rotation3d(0, 0,
+    // Math.PI);
   }
 
   @Override
@@ -119,7 +123,10 @@ public class VisionIOQuestNav implements VisionIO {
     for (int i = 0; i < length; i++) {
       data[i] =
           new QuestNavData(
-              newFrame[i].questPose3d().plus(robotToCamera.inverse()),
+              newFrame[i]
+                  .questPose3d()
+                  .rotateBy(robotToCamera.getRotation())
+                  .plus(robotToCamera.inverse()),
               battery,
               newFrame[i].dataTimestamp(),
               getQuestTranslation(newFrame[i].questPose3d()),
@@ -130,7 +137,6 @@ public class VisionIOQuestNav implements VisionIO {
   }
 
   private float[] getQuestTranslation(Pose3d pose) {
-    // TODO: Check if translation floats are correct.
     float xPosition = (float) pose.getX();
     float yPosition = (float) pose.getY();
     float zPosition = (float) pose.getZ();
@@ -139,8 +145,6 @@ public class VisionIOQuestNav implements VisionIO {
   }
 
   private float[] getQuestRotation(Rotation3d angle) {
-
-    // TODO: Check if yaw and roll are good when inversed
     float yaw = (float) -Units.radiansToDegrees(angle.getZ());
     float pitch = (float) Units.radiansToDegrees(angle.getY());
     float roll = (float) -Units.radiansToDegrees(angle.getX());
@@ -154,7 +158,7 @@ public class VisionIOQuestNav implements VisionIO {
         pose.getTranslation()
             .minus(lastPose3d.getTranslation().minus(questNavRawToFieldCoordinateSystem));
 
-    // TODO: clarify if we need to have the robot to camera 
+    // TODO: clarify if we need to have the robot to camera
     questNav.setPose(pose.transformBy(robotToCamera));
 
     count = 0;

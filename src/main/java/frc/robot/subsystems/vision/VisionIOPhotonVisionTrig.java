@@ -43,7 +43,7 @@ public class VisionIOPhotonVisionTrig implements VisionIO {
 
     for (var result : camera.getAllUnreadResults()) {
       // Update latest target observation
-      // Note: 
+      // Note:
       if (result.hasTargets()) {
         inputs.latestTargetObservation =
             new TargetObservation(
