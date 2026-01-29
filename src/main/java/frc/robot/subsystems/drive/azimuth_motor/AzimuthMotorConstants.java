@@ -4,10 +4,10 @@ import edu.wpi.first.math.geometry.Rotation2d;
 import frc.robot.subsystems.drive.DriveConstants;
 
 public class AzimuthMotorConstants {
-    //by default, the drive is set to the RoboRio's CANBus
-    //change this value if using CANivore to CANivore's Bus name, set in Phoenix Tuner X
-    //(if necessary, do this in DriveMotorConstants.java if drive motors are connected
-    //to CANivore as well)
+  // by default, the drive is set to the RoboRio's CANBus
+  // change this value if using CANivore to CANivore's Bus name, set in Phoenix Tuner X
+  // (if necessary, do this in DriveMotorConstants.java if drive motors are connected
+  // to CANivore as well)
   public static final String canBusName = "rio";
 
   public record AzimuthMotorGains(
