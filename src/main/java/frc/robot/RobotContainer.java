@@ -25,11 +25,11 @@ import frc.robot.subsystems.drive.Module;
 import frc.robot.subsystems.drive.azimuth_motor.AzimuthMotorConstants;
 import frc.robot.subsystems.drive.azimuth_motor.AzimuthMotorIOReplay;
 import frc.robot.subsystems.drive.azimuth_motor.AzimuthMotorIOSim;
-import frc.robot.subsystems.drive.azimuth_motor.AzimuthMotorIOTalonFX;
+import frc.robot.subsystems.drive.azimuth_motor.AzimuthMotorIOSparkMax;
 import frc.robot.subsystems.drive.drive_motor.DriveMotorConstants;
 import frc.robot.subsystems.drive.drive_motor.DriveMotorIOReplay;
 import frc.robot.subsystems.drive.drive_motor.DriveMotorIOSim;
-import frc.robot.subsystems.drive.drive_motor.DriveMotorIOTalonFX;
+import frc.robot.subsystems.drive.drive_motor.DriveMotorIOSparkMax;
 import frc.robot.subsystems.drive.gyro.GyroIO;
 import frc.robot.subsystems.drive.gyro.GyroIOPigeon2;
 import frc.robot.subsystems.drive.odometry_threads.PhoenixOdometryThread;
@@ -68,23 +68,23 @@ public class RobotContainer {
             new Drive(
                 new GyroIOPigeon2(0, "drive"),
                 new Module(
-                    new DriveMotorIOTalonFX(
+                    new DriveMotorIOSparkMax(
                         "FrontLeftDrive", DriveMotorConstants.FRONT_LEFT_CONFIG),
-                    new AzimuthMotorIOTalonFX(
+                    new AzimuthMotorIOSparkMax(
                         "FrontLeftSteer", AzimuthMotorConstants.FRONT_LEFT_CONFIG)),
                 new Module(
-                    new DriveMotorIOTalonFX(
+                    new DriveMotorIOSparkMax(
                         "FrontRightDrive", DriveMotorConstants.FRONT_RIGHT_CONFIG),
-                    new AzimuthMotorIOTalonFX(
+                    new AzimuthMotorIOSparkMax(
                         "FrontRightSteer", AzimuthMotorConstants.FRONT_RIGHT_CONFIG)),
                 new Module(
-                    new DriveMotorIOTalonFX("BackLeftDrive", DriveMotorConstants.BACK_LEFT_CONFIG),
-                    new AzimuthMotorIOTalonFX(
+                    new DriveMotorIOSparkMax("BackLeftDrive", DriveMotorConstants.BACK_LEFT_CONFIG),
+                    new AzimuthMotorIOSparkMax(
                         "BackLeftSteer", AzimuthMotorConstants.BACK_LEFT_CONFIG)),
                 new Module(
-                    new DriveMotorIOTalonFX(
+                    new DriveMotorIOSparkMax(
                         "BackRightDrive", DriveMotorConstants.BACK_RIGHT_CONFIG),
-                    new AzimuthMotorIOTalonFX(
+                    new AzimuthMotorIOSparkMax(
                         "BackRightSteer", AzimuthMotorConstants.BACK_RIGHT_CONFIG)),
                 DriveMotorConstants.EXAMPLE_GAINS,
                 AzimuthMotorConstants.EXAMPLE_GAINS,

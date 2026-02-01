@@ -33,7 +33,8 @@ public class PositionJointConstants {
       double kTolerance,
       double kDefaultSetpoint) {}
 
-  // Position Joint Gear Ratio should be multiplied by Math.PI * 2 for rotation joints to convert
+  // Position Joint Gear Ratio should be multiplied by Math.PI * 2 for rotation
+  // joints to convert
   // from rotations to radians
   public record PositionJointHardwareConfig(
       int[] canIds,
@@ -59,5 +60,24 @@ public class PositionJointConstants {
           EncoderType.EXTERNAL_CANCODER,
           11,
           Rotation2d.fromRotations(0.5),
+          "");
+
+  // ------------------
+  // Arm Joint
+  // ------------------
+  public static final PositionJointGains ARM_GAINS =
+      new PositionJointGains(
+          2.0, 0.0, 0.0, 0.7, 1.2, 1.5, 0.0, 8.0, 15.0, -Math.PI / 2, Math.PI / 2, 0.1, 0.0);
+
+  public static final PositionJointHardwareConfig ARM_CONFIG =
+      new PositionJointHardwareConfig(
+          new int[] {20, 21, 22, 23},
+          new boolean[] {false, false, true, true},
+          100.0 * 2 * Math.PI,
+          30,
+          GravityType.COSINE,
+          EncoderType.EXTERNAL_CANCODER,
+          21,
+          Rotation2d.fromRotations(0.25),
           "");
 }
