@@ -223,8 +223,11 @@ public class RobotContainer {
                 .ignoringDisable(true));
 
     // Controller binding for enabling shooter
-    controller.a().whileTrue(ShooterCommands.setShooterRPM(shooter, () -> ShooterCommands.SHOOTER_SPEED.SHOOTER_TARGET_RPM.get()));
-        
+    controller
+        .a()
+        .whileTrue(
+            ShooterCommands.setShooterRPM(
+                shooter, () -> ShooterCommands.SHOOTER_SPEED.SHOOTER_TARGET_RPM.get()));
   }
 
   /**
