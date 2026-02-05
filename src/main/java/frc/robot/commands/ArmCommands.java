@@ -1,5 +1,6 @@
 package frc.robot.commands;
 
+import edu.wpi.first.math.util.Units;
 import frc.robot.util.mechanical_advantage.LoggedTunableNumber;
 
 public class ArmCommands {
@@ -10,6 +11,6 @@ public class ArmCommands {
         new LoggedTunableNumber("ArmPresets/ArmStowed", 0.0);
 
     public static final LoggedTunableNumber ARM_SHOOT =
-        new LoggedTunableNumber("ArmPresets/ArmShoot", 60.0);
+        new LoggedTunableNumber("ArmPresets/ArmShoot", Units.degreesToRadians(0));
   }
 }

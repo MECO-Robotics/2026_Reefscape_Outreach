@@ -20,6 +20,7 @@ import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
 import frc.robot.commands.DriveCommands;
+import frc.robot.commands.ShooterCommands;
 import frc.robot.subsystems.drive.Drive;
 import frc.robot.subsystems.drive.Module;
 import frc.robot.subsystems.drive.azimuth_motor.AzimuthMotorConstants;
@@ -33,6 +34,11 @@ import frc.robot.subsystems.drive.drive_motor.DriveMotorIOSparkMax;
 import frc.robot.subsystems.drive.gyro.GyroIO;
 import frc.robot.subsystems.drive.gyro.GyroIOPigeon2;
 import frc.robot.subsystems.drive.odometry_threads.PhoenixOdometryThread;
+import frc.robot.subsystems.flywheel.Flywheel;
+import frc.robot.subsystems.flywheel.FlywheelConstants;
+import frc.robot.subsystems.flywheel.FlywheelIOReplay;
+import frc.robot.subsystems.flywheel.FlywheelIOSim;
+import frc.robot.subsystems.flywheel.FlywheelIOSparkMax;
 import org.littletonrobotics.junction.networktables.LoggedDashboardChooser;
 
 /**
@@ -44,6 +50,7 @@ import org.littletonrobotics.junction.networktables.LoggedDashboardChooser;
 public class RobotContainer {
   // Subsystems
   private final Drive drive;
+  private final Flywheel shooter;
 
   // Controller
   private final CommandXboxController controller = new CommandXboxController(0);
@@ -62,7 +69,8 @@ public class RobotContainer {
       case REAL:
         // Real robot, instantiate hardware IO implementations
 
-        // If using REV hardware, set up the Spark Odometry Thread, if using CTRE hardware, set up
+        // If using REV hardware, set up the Spark Odometry Thread, if using CTRE
+        // hardware, set up
         // the Phoenix Odometry Thread, if using a combination of the two, set up both
         drive =
             new Drive(
@@ -91,6 +99,11 @@ public class RobotContainer {
                 PhoenixOdometryThread.getInstance(),
                 null);
 
+        shooter =
+            new Flywheel(
+                new FlywheelIOSparkMax("Shooter", FlywheelConstants.SHOOTER_FLYWHEELS),
+                FlywheelConstants.SHOOTER_FLYWHEEL_GAINS);
+
         break;
 
       case SIM:
@@ -115,6 +128,10 @@ public class RobotContainer {
                 AzimuthMotorConstants.EXAMPLE_GAINS_SIM,
                 null,
                 null);
+        shooter =
+            new Flywheel(
+                new FlywheelIOSim("Shooter", FlywheelConstants.SHOOTER_FLYWHEELS),
+                FlywheelConstants.SHOOTER_FLYWHEEL_GAINS);
         break;
 
       default:
@@ -138,6 +155,8 @@ public class RobotContainer {
                 null,
                 null,
                 null);
+        shooter =
+            new Flywheel(new FlywheelIOReplay("Shooter"), FlywheelConstants.SHOOTER_FLYWHEEL_GAINS);
         break;
     }
 
@@ -180,14 +199,14 @@ public class RobotContainer {
             () -> -controller.getRightX()));
 
     // // Lock to 0° when A button is held
-    controller
-        .a()
-        .whileTrue(
-            DriveCommands.joystickDriveAtAngle(
-                drive,
-                () -> -controller.getLeftY(),
-                () -> -controller.getLeftX(),
-                () -> Rotation2d.kZero));
+    // controller
+    //         .a()
+    //         .whileTrue(
+    //                 DriveCommands.joystickDriveAtAngle(
+    //                         drive,
+    //                         () -> -controller.getLeftY(),
+    //                         () -> -controller.getLeftX(),
+    //                         () -> Rotation2d.kZero));
 
     // // Switch to X pattern when X button is pressed
     // controller.x().onTrue(Commands.runOnce(drive::stopWithX, drive));
@@ -202,6 +221,10 @@ public class RobotContainer {
                             new Pose2d(drive.getPose().getTranslation(), Rotation2d.kZero)),
                     drive)
                 .ignoringDisable(true));
+
+    // Controller binding for enabling shooter
+    controller.a().whileTrue(ShooterCommands.setShooterRPM(shooter, () -> ShooterCommands.SHOOTER_SPEED.SHOOTER_TARGET_RPM.get()));
+        
   }
 
   /**
